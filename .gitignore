@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local finance data and generated files
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+*.log
+*.zip
+bin/
+.buildozer/
+.kivy/
+
+# Local datasets, course materials and unrelated spreadsheets
+CURSO ASIMOV/
+Dados para Análise/
+Nova pasta/
+*.xls
+*.xlsx
+*.xlsm
+*.xlt
+*.xltx
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

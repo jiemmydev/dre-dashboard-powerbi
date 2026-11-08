@@ -1,50 +1,55 @@
-# 📊 Financial DRE & Variance Analytics Dashboard | Power BI
+# Financeiro Empresarial
 
-![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
-![DAX](https://img.shields.io/badge/DAX-0078D4?style=for-the-badge&logo=microsoft&logoColor=white)
-![Data Modeling](https://img.shields.io/badge/Data_Modeling-Star_Schema-blue?style=for-the-badge)
+Aplicativo de gestão financeira empresarial feito em Python, Kivy e SQLite,
+com lançamentos categorizados, DRE gerencial mensal e indicadores financeiros.
 
-## 📌 Sobre o Projeto
+## Recursos
 
-Este projeto consiste no desenvolvimento de um **Dashboard de DRE (Demonstração do Resultado do Exercício)** focado em inteligência financeira e **Análise de Variância (Orçado vs. Realizado)**. 
+- Registro local de receitas e despesas com categoria e subcategoria.
+- Classificação automática do tipo de lançamento pela subcategoria.
+- DRE gerencial mensal com Receita Líquida, Lucro Bruto, EBITDA, Lucro
+  Operacional e Lucro/Prejuízo Líquido.
+- KPIs: margens bruta, EBITDA e líquida; pesos de CMV, pessoal e ocupação sobre
+  Receita Líquida.
+- Persistência SQLite local e migração de dados do formato anterior.
+- Interface Kivy adaptável a telas verticais e navegação entre três telas.
 
-A solução foi projetada com layout executivo em tema escuro (*Dark Theme*), permitindo que gestores e diretores identifiquem rapidamente desvios de orçamento, analisem a Receita Bruta real e explorem a causa-raiz dos estouros de custos por categoria de produto e conta contábil.
+> A DRE é gerencial e simplificada. Não substitui demonstrações contábeis ou
+> fiscais nem representa aconselhamento contábil.
 
----
+## Executar no Windows
 
-## 🎯 Principais Indicadores (KPIs)
+Requer Python 3.10 ou superior. No PowerShell, na pasta do projeto:
 
-- **Receita Bruta Realizada:** R$ 240,75 Mi *(calculado via DAX para filtrar apenas a linha do DRE contábil)*.
-- **Valor Orçado Total:** R$ 146,26 Mi.
-- **Valor Realizado Total:** R$ 143,60 Mi.
-- **Desvio Absoluto:** -R$ 2,66 Mi.
-- **Desvio Percentual (%):** -1,82%.
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python main.py
+```
 
----
+O banco é salvo no diretório privado de dados do Kivy. Os testes do motor
+financeiro podem ser executados sem iniciar a interface:
 
-## 🛠️ Funcionalidades & Análises Visuais
+```powershell
+python -m unittest discover -s tests -v
+```
 
-1. **Matriz DRE Estruturada:**
-   - Exibição das contas na ordem contábil padrão: `Receita Bruta` $\rightarrow$ `Deduções` $\rightarrow$ `Custos` $\rightarrow$ `Despesas` $\rightarrow$ `Impostos`.
-   - Comparativo direto entre Orçado, Realizado e Desvio por grupo.
+## Gerar APK Android
 
-2. **Acompanhamento Temporal (Mês a Mês):**
-   - Evolução da curva do **Valor Orçado vs. Valor Realizado** ao longo dos meses de 2019.
+Buildozer precisa de Linux. Em Windows, use WSL 2 com Ubuntu e copie apenas os
+arquivos do app (`app.py`, `finance_core.py`, `main.py`, `requirements.txt`,
+`buildozer.spec`, `README.md`, `GUIA_ANDROID.md` e `tests/`) para uma pasta no
+sistema de arquivos Linux do WSL. Instruções completas de dependências e
+compilação estão em [GUIA_ANDROID.md](./GUIA_ANDROID.md).
 
-3. **Análise Causa-Raiz (Top Desvios):**
-   - **Desvio por Conta:** Identificação dos produtos/contas com maior desvio negativo (ex: *Venda de TV LED 32'*, *Galaxy J8*).
-   - **Desvio por Nível 2:** Mapeamento das categorias com maior estouro orçamentário (ex: *Outras Receitas*, *Despesas Administrativas*).
+## Estrutura
 
----
+- `main.py`: ponto de entrada para execução e Buildozer.
+- `app.py`: interface e ciclo de vida Kivy.
+- `finance_core.py`: regras financeiras, percentuais e persistência SQLite.
+- `tests/`: testes unitários de cálculos, dados e migração.
+- `buildozer.spec`: configuração de empacotamento Android.
 
-## 📐 Arquitetura & DAX
-
-- **Modelagem de Dados:** Esquema em Estrela (*Star Schema*) conectando a tabela fato de lançamentos com as dimensões `Plano de Contas`, `Formato DRE` e `Calendário`.
-- **Exemplo de Medida DAX (Filtragem de Receita Bruta):**
-
-```dax
-Receita Bruta Realizada = 
-CALCULATE(
-    SUM('Analise_DRE'[Valor Realizado]),
-    'Plano de Contas'[Nível 1] = "(+) RECEITA BRUTA"
-)
+O Git ignore exclui o ambiente virtual, bancos locais, arquivos gerados e as
+pastas de cursos/planilhas que também existem neste workspace.
